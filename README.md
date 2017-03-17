@@ -2,6 +2,8 @@
 
 Rebuild Magento 2 Visual Merchandiser categories using the CLI tool.
 
+> :warning: **NOTE:** This module is not fully tested, please make sure to test this on a non-production system first, and use at your own risk!
+
 ## Installation
 
 ```bash
