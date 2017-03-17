@@ -5,7 +5,7 @@ Rebuild Magento 2 Visual Merchandiser categories using the CLI tool.
 ## Installation
 
 ```bash
-composer require 'dannynimmo/magento2-visual-merchandiser-rebuild:^0.1.0'
+composer require dannynimmo/magento2-visual-merchandiser-rebuild
 ```
 
 ## Usage
