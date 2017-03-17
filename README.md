@@ -18,5 +18,8 @@ bin/magento catalog:visual-merchandiser:rebuild
 
 ## Changelog
 
+### [0.1.1](https://github.com/dannynimmo/magento2-visual-merchandiser-rebuild/releases/tag/0.1.1) — 2017-03-17
+* Fixed major issue where URL keys were missing from collection
+
 ### [0.1.0](https://github.com/dannynimmo/magento2-visual-merchandiser-rebuild/releases/tag/0.1.0) — 2017-02-28
 * Released!
