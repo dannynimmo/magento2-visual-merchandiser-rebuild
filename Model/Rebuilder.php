@@ -12,6 +12,7 @@ use Magento\Catalog\Model\Indexer\Category\Product as CategoryProductIndexer;
 use Magento\Catalog\Model\Indexer\Category\ProductFactory as CategoryProductIndexerFactory;
 use Magento\Catalog\Model\ResourceModel\Category\Collection as CategoryCollection;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
+use Magento\Store\Model\Store;
 use Magento\VisualMerchandiser\Model\Category\Builder;
 use Magento\VisualMerchandiser\Model\Category\BuilderFactory;
 use Magento\VisualMerchandiser\Model\Rules;
@@ -69,8 +70,9 @@ class Rebuilder
      *
      * @return void
      */
-    public function filterCategories ()
+    public function filterCategories ($storeId = Store::DEFAULT_STORE_ID)
     {
+        $this->categoryCollection->setStoreId($storeId);
         /** @var Category $category */
         foreach ($this->categoryCollection as $key => $category) {
             $rule = $this->rules->loadByCategory($category);
@@ -85,16 +87,20 @@ class Rebuilder
      *
      * @return int[] Rebuilt Category IDs
      */
-    public function rebuildAll ()
+    public function rebuildAll ($storeId = Store::DEFAULT_STORE_ID)
     {
         $rebuiltIds = [];
 
-        $this->filterCategories();
+        $this->filterCategories($storeId);
 
         /** @var Category $category */
         foreach ($this->categoryCollection as $category) {
-            $category->save();
-            $rebuiltIds[] = (int) $category->getId();
+            $categoryId = (int) $category->getId();
+            $category
+                ->setStoreId($storeId)
+                ->load($categoryId)
+                ->save();
+            $rebuiltIds[] = $categoryId;
         }
 
         $this->categoryProductIndexer->executeList($rebuiltIds);
