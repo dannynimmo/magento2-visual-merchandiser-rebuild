@@ -2,7 +2,8 @@
 <!--
 /**
  * @author    Danny Nimmo <d@nny.nz>
- * @category  DannyNimmo\VisualMerchandiserRebuild
+ * @author    Simon Dakin <hello@simondakin.com>
+ * @category  Dakzilla\VisualMerchandiserRebuild
  * @copyright Copyright © 2017 Danny Nimmo
  */
 -->
@@ -10,7 +11,8 @@
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="showModeCommand" xsi:type="object">DannyNimmo\VisualMerchandiserRebuild\Console\Command\RebuildCommand</item>
+                <item name="dannynimmo_vmrebuild_rebuild" xsi:type="object">Dakzilla\VisualMerchandiserRebuild\Console\Command\RebuildCommand</item>
+                <item name="dannynimmo_vmrebuild_show" xsi:type="object">Dakzilla\VisualMerchandiserRebuild\Console\Command\ShowCommand</item>
             </argument>
         </arguments>
     </type>

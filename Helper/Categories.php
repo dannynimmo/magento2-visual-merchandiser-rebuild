@@ -1,31 +1,24 @@
 <?php
-/**
- * @author    Danny Nimmo <d@nny.nz>
- * @category  DannyNimmo\VisualMerchandiserRebuild
- * @copyright Copyright © 2017 Danny Nimmo
- */
 
-namespace DannyNimmo\VisualMerchandiserRebuild\Model;
+namespace Dakzilla\VisualMerchandiserRebuild\Helper;
 
+use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Framework\App\Helper\Context;
 use Magento\Catalog\Model\Category;
-use Magento\Catalog\Model\Indexer\Category\Product as CategoryProductIndexer;
-use Magento\Catalog\Model\Indexer\Category\ProductFactory as CategoryProductIndexerFactory;
 use Magento\Catalog\Model\ResourceModel\Category\Collection as CategoryCollection;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 use Magento\Store\Model\Store;
-use Magento\VisualMerchandiser\Model\Category\Builder;
-use Magento\VisualMerchandiser\Model\Category\BuilderFactory;
 use Magento\VisualMerchandiser\Model\Rules;
 use Magento\VisualMerchandiser\Model\RulesFactory;
+use Magento\Catalog\Model\Indexer\Category\Product as CategoryProductIndexer;
+use Magento\Catalog\Model\Indexer\Category\ProductFactory as CategoryProductIndexerFactory;
 
-class Rebuilder
+/**
+ * Class Categories
+ * @package Dakzilla\VisualMerchandiserRebuild\Helper
+ */
+class Categories extends AbstractHelper
 {
-
-    /**
-     * Category Collection
-     * @var CategoryCollection
-     */
-    protected $categoryCollection;
 
     /**
      * Rules model
@@ -34,10 +27,11 @@ class Rebuilder
     protected $rules;
 
     /**
-     * Visual Merchandiser Builder model
-     * @var Builder
+     * Category Collection
+     * @var CategoryCollection
      */
-    protected $builder;
+    protected $categoryCollection;
+
 
     /**
      * Category Product Indexer model
@@ -46,33 +40,36 @@ class Rebuilder
     protected $categoryProductIndexer;
 
     /**
-     * Rebuilder constructor
-     *
-     * @param CategoryCollectionFactory $categoryCollectionFactory
+     * Categories constructor.
+     * @param Context $context
      * @param RulesFactory $rulesFactory
-     * @param BuilderFactory $builderFactory
+     * @param CategoryCollectionFactory $collectionFactory
      * @param CategoryProductIndexerFactory $categoryProductIndexerFactory
      */
-    public function __construct (
-        CategoryCollectionFactory $categoryCollectionFactory,
+    public function __construct(
+        Context $context,
         RulesFactory $rulesFactory,
-        BuilderFactory $builderFactory,
+        CategoryCollectionFactory $collectionFactory,
         CategoryProductIndexerFactory $categoryProductIndexerFactory
-    ) {
-        $this->categoryCollection = $categoryCollectionFactory->create();
+    )
+    {
+
         $this->rules = $rulesFactory->create();
-        $this->builder = $builderFactory->create();
+        $this->categoryCollection = $collectionFactory->create();
         $this->categoryProductIndexer = $categoryProductIndexerFactory->create();
+        parent::__construct($context);
     }
 
     /**
-     * Remove categories without Visual Merchandiser rules
+     * Get collection of Visual Merchandiser categories
      *
-     * @return void
+     * @param $storeId
+     * @return CategoryCollection
      */
-    public function filterCategories ($storeId = Store::DEFAULT_STORE_ID)
+    public function getSmartCategoryCollection($storeId = Store::DEFAULT_STORE_ID)
     {
         $this->categoryCollection->setStoreId($storeId);
+
         /** @var Category $category */
         foreach ($this->categoryCollection as $key => $category) {
             $rule = $this->rules->loadByCategory($category);
@@ -80,27 +77,30 @@ class Rebuilder
                 $this->categoryCollection->removeItemByKey($key);
             }
         }
+
+        return $this->categoryCollection;
     }
 
     /**
      * Rebuild all Visual Merchandiser categories
      *
-     * @return int[] Rebuilt Category IDs
+     * @param int $storeId
+     * @return \int[] Rebuilt Category IDs
+     * @throws \Exception
      */
-    public function rebuildAll ($storeId = Store::DEFAULT_STORE_ID)
+    public function rebuildAll($storeId = Store::DEFAULT_STORE_ID)
     {
         $rebuiltIds = [];
-
-        $this->filterCategories($storeId);
+        $smartCategoryCollection = $this->getSmartCategoryCollection($storeId);
 
         /** @var Category $category */
-        foreach ($this->categoryCollection as $category) {
-            $categoryId = (int) $category->getId();
-            $category
+        foreach ($smartCategoryCollection as $smartCategory) {
+            $smartCategoryId = (int)$smartCategory->getId();
+            $smartCategory
                 ->setStoreId($storeId)
-                ->load($categoryId)
+                ->load($smartCategoryId)
                 ->save();
-            $rebuiltIds[] = $categoryId;
+            $rebuiltIds[] = $smartCategoryId;
         }
 
         $this->categoryProductIndexer->executeList($rebuiltIds);
