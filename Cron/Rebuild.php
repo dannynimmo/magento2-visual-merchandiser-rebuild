@@ -1,8 +1,8 @@
 <?php
 
-namespace DannyNimmo\VisualMerchandiserRebuild\Cron;
+namespace Dakzilla\VisualMerchandiserRebuild\Cron;
 
-use DannyNimmo\VisualMerchandiserRebuild\Helper\Categories as CategoryHelper;
+use Dakzilla\VisualMerchandiserRebuild\Helper\Categories as CategoryHelper;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Psr\Log\LoggerInterface;
 

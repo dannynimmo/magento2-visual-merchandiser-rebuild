@@ -1,6 +1,6 @@
 <?php
 
-namespace DannyNimmo\VisualMerchandiserRebuild\App\Config;
+namespace Dakzilla\VisualMerchandiserRebuild\App\Config;
 
 use Magento\Framework\Exception\LocalizedException;
 

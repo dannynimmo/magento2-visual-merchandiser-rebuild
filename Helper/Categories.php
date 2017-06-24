@@ -1,6 +1,6 @@
 <?php
 
-namespace DannyNimmo\VisualMerchandiserRebuild\Helper;
+namespace Dakzilla\VisualMerchandiserRebuild\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
@@ -15,7 +15,7 @@ use Magento\Catalog\Model\Indexer\Category\ProductFactory as CategoryProductInde
 
 /**
  * Class Categories
- * @package DannyNimmo\VisualMerchandiserRebuild\Helper
+ * @package Dakzilla\VisualMerchandiserRebuild\Helper
  */
 class Categories extends AbstractHelper
 {

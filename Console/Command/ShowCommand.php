@@ -1,13 +1,8 @@
 <?php
-/**
- * @author    Danny Nimmo <d@nny.nz>
- * @category  DannyNimmo\VisualMerchandiserRebuild
- * @copyright Copyright © 2017 Danny Nimmo
- */
 
-namespace DannyNimmo\VisualMerchandiserRebuild\Console\Command;
+namespace Dakzilla\VisualMerchandiserRebuild\Console\Command;
 
-use DannyNimmo\VisualMerchandiserRebuild\Helper\Categories as CategoryHelper;
+use Dakzilla\VisualMerchandiserRebuild\Helper\Categories as CategoryHelper;
 use Magento\Catalog\Model\Category;
 use Magento\Catalog\Model\CategoryRepository;
 use Magento\Framework\App\Area;

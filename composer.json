@@ -1,7 +1,7 @@
 {
-    "name": "dannynimmo/magento2-visual-merchandiser-rebuild",
+    "name": "dakzilla/magento2-visual-merchandiser-rebuild",
     "description": "Rebuild Magento 2 Visual Merchandiser categories using the CLI tool",
-    "version": "0.1.1",
+    "version": "0.2",
     "type": "magento2-module",
     "license": "MIT",
     "keywords": [
@@ -9,12 +9,16 @@
         "magento2",
         "visual merchandiser"
     ],
-    "homepage": "https://github.com/dannynimmo/magento2-visual-merchandiser-rebuild",
+    "homepage": "https://github.com/dakzilla/magento2-visual-merchandiser-rebuild",
     "authors": [
         {
             "name": "Danny Nimmo",
             "email": "d@nny.nz",
             "homepage": "https://danny.nz/"
+        },
+        {
+            "name": "Simon Dakin",
+            "email": "hello@simondakin.com"
         }
     ],
     "require": {
@@ -27,7 +31,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "DannyNimmo\\VisualMerchandiserRebuild\\": ""
+            "Dakzilla\\VisualMerchandiserRebuild\\": ""
         }
     }
 }

@@ -1,14 +1,15 @@
 <?php
 /**
  * @author    Danny Nimmo <d@nny.nz>
- * @category  DannyNimmo\VisualMerchandiserRebuild
+ * @author    Simon Dakin <hello@simondakin.com>
+ * @category  Dakzilla\VisualMerchandiserRebuild
  * @copyright Copyright © 2017 Danny Nimmo
  */
 
-namespace DannyNimmo\VisualMerchandiserRebuild\Console\Command;
+namespace Dakzilla\VisualMerchandiserRebuild\Console\Command;
 
 
-use DannyNimmo\VisualMerchandiserRebuild\Helper\Categories as CategoryHelper;
+use Dakzilla\VisualMerchandiserRebuild\Helper\Categories as CategoryHelper;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\Exception\LocalizedException;

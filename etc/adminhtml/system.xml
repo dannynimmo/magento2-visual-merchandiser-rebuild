@@ -10,7 +10,7 @@
                 </field>
                 <field id="cronjob_expression" translate="label comment" type="text" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Cron job expression</label>
-                    <backend_model>DannyNimmo\VisualMerchandiserRebuild\App\Config\Cronjob</backend_model>
+                    <backend_model>Dakzilla\VisualMerchandiserRebuild\App\Config\Cronjob</backend_model>
                     <comment>Enter a valid cron expression to setup up automatic regeneration of Visual Merchandiser categories (Ex: 0 1 * * *)</comment>
                     <depends>
                         <field id="cronjob_enabled">1</field>
