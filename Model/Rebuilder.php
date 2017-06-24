@@ -12,6 +12,7 @@ use Magento\Catalog\Model\Indexer\Category\Product as CategoryProductIndexer;
 use Magento\Catalog\Model\Indexer\Category\ProductFactory as CategoryProductIndexerFactory;
 use Magento\Catalog\Model\ResourceModel\Category\Collection as CategoryCollection;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
+use Magento\Framework\App\State;
 use Magento\Store\Model\Store;
 use Magento\VisualMerchandiser\Model\Category\Builder;
 use Magento\VisualMerchandiser\Model\Category\BuilderFactory;
@@ -45,6 +46,7 @@ class Rebuilder
      */
     protected $categoryProductIndexer;
 
+
     /**
      * Rebuilder constructor
      *
@@ -53,12 +55,13 @@ class Rebuilder
      * @param BuilderFactory $builderFactory
      * @param CategoryProductIndexerFactory $categoryProductIndexerFactory
      */
-    public function __construct (
+    public function __construct(
         CategoryCollectionFactory $categoryCollectionFactory,
         RulesFactory $rulesFactory,
         BuilderFactory $builderFactory,
         CategoryProductIndexerFactory $categoryProductIndexerFactory
-    ) {
+    )
+    {
         $this->categoryCollection = $categoryCollectionFactory->create();
         $this->rules = $rulesFactory->create();
         $this->builder = $builderFactory->create();
@@ -70,7 +73,7 @@ class Rebuilder
      *
      * @return void
      */
-    public function filterCategories ($storeId = Store::DEFAULT_STORE_ID)
+    public function filterCategories($storeId = Store::DEFAULT_STORE_ID)
     {
         $this->categoryCollection->setStoreId($storeId);
         /** @var Category $category */
@@ -87,7 +90,7 @@ class Rebuilder
      *
      * @return int[] Rebuilt Category IDs
      */
-    public function rebuildAll ($storeId = Store::DEFAULT_STORE_ID)
+    public function rebuildAll($storeId = Store::DEFAULT_STORE_ID)
     {
         $rebuiltIds = [];
 
@@ -95,7 +98,7 @@ class Rebuilder
 
         /** @var Category $category */
         foreach ($this->categoryCollection as $category) {
-            $categoryId = (int) $category->getId();
+            $categoryId = (int)$category->getId();
             $category
                 ->setStoreId($storeId)
                 ->load($categoryId)
