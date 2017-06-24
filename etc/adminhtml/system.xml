@@ -8,7 +8,7 @@
                     <comment>Enables rebuilding Visual Merchandiser categories via cron job</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="cronjob_expression" translate="label comment" type="text" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                <field id="cronjob_expression" translate="label comment" type="text" sortOrder="2" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Cron job expression</label>
                     <backend_model>DannyNimmo\VisualMerchandiserRebuild\App\Config\Cronjob</backend_model>
                     <comment>Enter a valid cron expression to setup up automatic regeneration of Visual Merchandiser categories (Ex: 0 1 * * *)</comment>
