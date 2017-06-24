@@ -10,7 +10,8 @@
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="showModeCommand" xsi:type="object">DannyNimmo\VisualMerchandiserRebuild\Console\Command\RebuildCommand</item>
+                <item name="dannynimmo_vmrebuild_rebuild" xsi:type="object">DannyNimmo\VisualMerchandiserRebuild\Console\Command\RebuildCommand</item>
+                <item name="dannynimmo_vmrebuild_show" xsi:type="object">DannyNimmo\VisualMerchandiserRebuild\Console\Command\ShowCommand</item>
             </argument>
         </arguments>
     </type>
