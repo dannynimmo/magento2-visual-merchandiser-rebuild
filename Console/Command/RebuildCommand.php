@@ -7,9 +7,7 @@
 
 namespace DannyNimmo\VisualMerchandiserRebuild\Console\Command;
 
-use Magento\Catalog\Model\Category;
-use Magento\Catalog\Model\Indexer\Category\Product as CategoryProductIndexer;
-use Magento\Catalog\Model\Indexer\Category\ProductFactory as CategoryProductIndexerFactory;
+
 use DannyNimmo\VisualMerchandiserRebuild\Helper\Categories as CategoryHelper;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
@@ -17,7 +15,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Magento\Store\Model\Store;
+
 
 class RebuildCommand extends Command
 {
@@ -41,27 +39,18 @@ class RebuildCommand extends Command
     protected $state;
 
     /**
-     * Category Product Indexer model
-     * @var CategoryProductIndexer
-     */
-    protected $categoryProductIndexer;
-
-    /**
      * RebuildCommand constructor
      *
      * @param State $state
-     * @param CategoryProductIndexerFactory $categoryProductIndexerFactory
      * @param CategoryHelper $categoryHelper
      * @throws \LogicException
      */
     public function __construct(
         State $state,
-        CategoryProductIndexerFactory $categoryProductIndexerFactory,
         CategoryHelper $categoryHelper
     )
     {
         $this->state = $state;
-        $this->categoryProductIndexer = $categoryProductIndexerFactory->create();
         $this->categoryHelper = $categoryHelper;
         parent::__construct();
     }
@@ -96,7 +85,7 @@ class RebuildCommand extends Command
 
         try {
             $startTime = microtime(true);
-            $rebuiltIds = $this->rebuildAll();
+            $rebuiltIds = $this->categoryHelper->rebuildAll();
             $resultTime = microtime(true) - $startTime;
             $count = count($rebuiltIds);
             $time = gmdate('H:i:s', $resultTime);
@@ -105,33 +94,6 @@ class RebuildCommand extends Command
         } catch (\Exception $e) {
             $output->writeln('<error>' . sprintf(self::MESSAGE_ERROR, $e->getMessage()) . '</error>');
         }
-    }
-
-    /**
-     * Rebuild all Visual Merchandiser categories
-     *
-     * @param int $storeId
-     * @return \int[] Rebuilt Category IDs
-     * @throws \Exception
-     */
-    protected function rebuildAll($storeId = Store::DEFAULT_STORE_ID)
-    {
-        $rebuiltIds = [];
-        $smartCategoryCollection = $this->categoryHelper->getSmartCategoryCollection($storeId);
-
-        /** @var Category $category */
-        foreach ($smartCategoryCollection as $smartCategory) {
-            $smartCategoryId = (int)$smartCategory->getId();
-            $smartCategory
-                ->setStoreId($storeId)
-                ->load($smartCategoryId)
-                ->save();
-            $rebuiltIds[] = $smartCategoryId;
-        }
-
-        $this->categoryProductIndexer->executeList($rebuiltIds);
-
-        return $rebuiltIds;
     }
 
 }
