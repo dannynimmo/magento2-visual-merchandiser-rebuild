@@ -8,6 +8,9 @@
 namespace DannyNimmo\VisualMerchandiserRebuild\Console\Command;
 
 use DannyNimmo\VisualMerchandiserRebuild\Model\Rebuilder;
+use Magento\Framework\App\Area as AppArea;
+use Magento\Framework\App\State as AppState;
+use Magento\Framework\Exception\LocalizedException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,6 +26,12 @@ class RebuildCommand
     const MESSAGE_ERROR   = 'Error: %s';
 
     /**
+     * Application state flags
+     * @var AppState
+     */
+    protected $appState;
+
+    /**
      * Visual Merchandiser rebuilder
      * @var Rebuilder
      */
@@ -31,12 +40,15 @@ class RebuildCommand
     /**
      * RebuildCommand constructor
      *
+     * @param AppState $appState
      * @param Rebuilder $rebuilder
      */
     public function __construct (
+        AppState $appState,
         Rebuilder $rebuilder
     ) {
         parent::__construct();
+        $this->appState = $appState;
         $this->rebuilder = $rebuilder;
     }
 
@@ -60,6 +72,12 @@ class RebuildCommand
         OutputInterface $output
     ) {
         try {
+            try {
+                $this->appState->setAreaCode(AppArea::AREA_ADMINHTML);
+            } catch (LocalizedException $e) {
+                // Area code was already set
+            }
+
             $startTime  = microtime(true);
             $rebuiltIds = $this->rebuilder->rebuildAll();
             $resultTime = microtime(true) - $startTime;
