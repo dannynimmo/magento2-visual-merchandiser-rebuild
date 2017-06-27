@@ -18,6 +18,10 @@ bin/magento catalog:visual-merchandiser:rebuild
 
 ## Changelog
 
+### [0.1.2](https://github.com/dannynimmo/magento2-visual-merchandiser-rebuild/releases/tag/0.1.2) — 2017-06-27
+* Fixed "Area code not set" bug in later versions of Magento _(thanks [@dakzilla](https://github.com/dakzilla))_
+* Added dependencies explicitly in `composer.json`
+
 ### [0.1.1](https://github.com/dannynimmo/magento2-visual-merchandiser-rebuild/releases/tag/0.1.1) — 2017-03-17
 * Fixed major issue where URL keys were missing from collection
 
