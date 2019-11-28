@@ -1,13 +1,12 @@
-<?php
+<?php declare(strict_types=1);
 /**
- * @author    Danny Nimmo <d@nny.nz>
- * @category  DannyNimmo\VisualMerchandiserRebuild
- * @copyright Copyright © 2017 Danny Nimmo
+ * Copyright © Danny Nimmo. All rights reserved. See LICENSE file for license details.
  */
 
 namespace DannyNimmo\VisualMerchandiserRebuild\Console\Command;
 
 use DannyNimmo\VisualMerchandiserRebuild\Model\Rebuilder;
+use Exception;
 use Magento\Framework\App\Area as AppArea;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\LocalizedException;
@@ -15,35 +14,34 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RebuildCommand
-    extends Command
+/**
+ * Console CLI command to rebuild the visual merchandiser categories
+ */
+class RebuildCommand extends Command
 {
-
     const NAME        = 'catalog:visual-merchandiser:rebuild';
     const DESCRIPTION = 'Rebuilds Visual Merchandiser categories';
 
-    const MESSAGE_SUCCESS = 'Rebuilt %s Visual Merchandiser categories in %s';
+    const MESSAGE_SUCCESS = 'Rebuilt %s Visual Merchandiser categories';
     const MESSAGE_ERROR   = 'Error: %s';
 
     /**
-     * Application state flags
      * @var AppState
      */
     protected $appState;
 
     /**
-     * Visual Merchandiser rebuilder
      * @var Rebuilder
      */
     protected $rebuilder;
 
     /**
-     * RebuildCommand constructor
+     * Initialise dependencies
      *
      * @param AppState $appState
      * @param Rebuilder $rebuilder
      */
-    public function __construct (
+    public function __construct(
         AppState $appState,
         Rebuilder $rebuilder
     ) {
@@ -53,42 +51,34 @@ class RebuildCommand
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    protected function configure ()
+    protected function configure()
     {
-        $this
-            ->setName(self::NAME)
-            ->setDescription(self::DESCRIPTION)
-        ;
-        parent::configure();
+        $this->setName(self::NAME);
+        $this->setDescription(self::DESCRIPTION);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    protected function execute (
+    protected function execute(
         InputInterface $input,
         OutputInterface $output
     ) {
         try {
             try {
                 $this->appState->setAreaCode(AppArea::AREA_ADMINHTML);
+            // phpcs:ignore Magento2.CodeAnalysis.EmptyBlock.DetectedCatch
             } catch (LocalizedException $e) {
                 // Area code was already set
             }
 
-            $startTime  = microtime(true);
             $rebuiltIds = $this->rebuilder->rebuildAll();
-            $resultTime = microtime(true) - $startTime;
 
-            $count = count($rebuiltIds);
-            $time  = gmdate('H:i:s', $resultTime);
-
-            $output->writeln('<info>' . sprintf(self::MESSAGE_SUCCESS, $count, $time) . '</info>');
-        } catch (\Exception $e) {
+            $output->writeln('<info>' . sprintf(self::MESSAGE_SUCCESS, count($rebuiltIds)) . '</info>');
+        } catch (Exception $e) {
             $output->writeln('<error>' . sprintf(self::MESSAGE_ERROR, $e->getMessage()) . '</error>');
         }
     }
-
 }

@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 /**
- * @author    Danny Nimmo <d@nny.nz>
- * @category  DannyNimmo\VisualMerchandiserRebuild
- * @copyright Copyright © 2017 Danny Nimmo
+ * Copyright © Danny Nimmo. All rights reserved. See LICENSE file for license details.
  */
 
 \Magento\Framework\Component\ComponentRegistrar::register(

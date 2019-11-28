@@ -1,8 +1,6 @@
 # Rebuild Visual Merchandiser Categories for Magento 2
 
-Rebuild Magento 2 Visual Merchandiser categories using the CLI tool.
-
-> :warning: **NOTE:** This module is not fully tested, please make sure to test this on a non-production system first, and use at your own risk!
+Rebuild Magento 2 Visual Merchandiser categories using the CLI tool, or via scheduled cron job
 
 ## Installation
 
@@ -17,6 +15,9 @@ bin/magento catalog:visual-merchandiser:rebuild
 ```
 
 ## Changelog
+
+### Unreleased
+* Fixed code style & Magento 2 code quality warnings
 
 ### [0.1.2](https://github.com/dannynimmo/magento2-visual-merchandiser-rebuild/releases/tag/0.1.2) — 2017-06-27
 * Fixed "Area code not set" bug in later versions of Magento _(thanks [@dakzilla](https://github.com/dakzilla))_

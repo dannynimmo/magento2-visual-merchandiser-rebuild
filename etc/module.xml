@@ -1,13 +1,10 @@
 <?xml version="1.0"?>
 <!--
-/**
- * @author    Danny Nimmo <d@nny.nz>
- * @category  DannyNimmo\VisualMerchandiserRebuild
- * @copyright Copyright © 2017 Danny Nimmo
- */
+Copyright © Danny Nimmo. All rights reserved. See LICENSE file for license details.
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="DannyNimmo_VisualMerchandiserRebuild" setup_version="0.1.2">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="DannyNimmo_VisualMerchandiserRebuild">
         <sequence>
             <module name="Magento_VisualMerchandiser"/>
         </sequence>

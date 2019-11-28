@@ -1,101 +1,99 @@
-<?php
+<?php declare(strict_types=1);
 /**
- * @author    Danny Nimmo <d@nny.nz>
- * @category  DannyNimmo\VisualMerchandiserRebuild
- * @copyright Copyright © 2017 Danny Nimmo
+ * Copyright © Danny Nimmo. All rights reserved. See LICENSE file for license details.
  */
 
 namespace DannyNimmo\VisualMerchandiserRebuild\Model;
 
+use Exception;
 use Magento\Catalog\Model\Category;
 use Magento\Catalog\Model\Indexer\Category\Product as CategoryProductIndexer;
-use Magento\Catalog\Model\Indexer\Category\ProductFactory as CategoryProductIndexerFactory;
 use Magento\Catalog\Model\ResourceModel\Category\Collection as CategoryCollection;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
+use Magento\Store\Api\StoreRepositoryInterface;
 use Magento\Store\Model\Store;
-use Magento\VisualMerchandiser\Model\Category\Builder;
-use Magento\VisualMerchandiser\Model\Category\BuilderFactory;
 use Magento\VisualMerchandiser\Model\Rules;
 use Magento\VisualMerchandiser\Model\RulesFactory;
 
+/**
+ * Rebuild Visual Merchandiser categories
+ */
 class Rebuilder
 {
-
     /**
-     * Category Collection
-     * @var CategoryCollection
+     * @var StoreRepositoryInterface
      */
-    protected $categoryCollection;
+    private $storeRepository;
 
     /**
-     * Rules model
-     * @var Rules
+     * @var CategoryCollectionFactory
      */
-    protected $rules;
+    private $catCollectionFactory;
 
     /**
-     * Visual Merchandiser Builder model
-     * @var Builder
+     * @var RulesFactory
      */
-    protected $builder;
+    private $rulesFactory;
 
     /**
-     * Category Product Indexer model
      * @var CategoryProductIndexer
      */
-    protected $categoryProductIndexer;
+    private $catProductIndexer;
 
     /**
-     * Rebuilder constructor
+     * Initialise dependencies
      *
-     * @param CategoryCollectionFactory $categoryCollectionFactory
+     * @param StoreRepositoryInterface $storeRepository
+     * @param CategoryCollectionFactory $catCollectionFactory
      * @param RulesFactory $rulesFactory
-     * @param BuilderFactory $builderFactory
-     * @param CategoryProductIndexerFactory $categoryProductIndexerFactory
+     * @param CategoryProductIndexer $catProductIndexer
      */
-    public function __construct (
-        CategoryCollectionFactory $categoryCollectionFactory,
+    public function __construct(
+        StoreRepositoryInterface $storeRepository,
+        CategoryCollectionFactory $catCollectionFactory,
         RulesFactory $rulesFactory,
-        BuilderFactory $builderFactory,
-        CategoryProductIndexerFactory $categoryProductIndexerFactory
+        CategoryProductIndexer $catProductIndexer
     ) {
-        $this->categoryCollection = $categoryCollectionFactory->create();
-        $this->rules = $rulesFactory->create();
-        $this->builder = $builderFactory->create();
-        $this->categoryProductIndexer = $categoryProductIndexerFactory->create();
+        $this->storeRepository = $storeRepository;
+        $this->catCollectionFactory = $catCollectionFactory;
+        $this->rulesFactory = $rulesFactory;
+        $this->catProductIndexer = $catProductIndexer;
     }
 
     /**
-     * Remove categories without Visual Merchandiser rules
+     * Rebuild all Visual Merchandiser categories for all stores
      *
-     * @return void
+     * @return array
+     * @throws Exception
      */
-    public function filterCategories ($storeId = Store::DEFAULT_STORE_ID)
-    {
-        $this->categoryCollection->setStoreId($storeId);
-        /** @var Category $category */
-        foreach ($this->categoryCollection as $key => $category) {
-            $rule = $this->rules->loadByCategory($category);
-            if (!$rule->getId() || !$rule->getIsActive()) {
-                $this->categoryCollection->removeItemByKey($key);
-            }
-        }
-    }
-
-    /**
-     * Rebuild all Visual Merchandiser categories
-     *
-     * @return int[] Rebuilt Category IDs
-     */
-    public function rebuildAll ($storeId = Store::DEFAULT_STORE_ID)
+    public function rebuildAll(): array
     {
         $rebuiltIds = [];
 
-        $this->filterCategories($storeId);
+        foreach ($this->storeRepository->getList() as $store) {
+            $rebuiltIds[] = $this->rebuildStore($store->getId());
+        }
+
+        return array_merge([], ...$rebuiltIds);
+    }
+
+    /**
+     * Rebuild Visual Merchandiser categories for a store
+     *
+     * @param int $storeId
+     * @return int[] Rebuilt Category IDs
+     * @throws Exception
+     */
+    public function rebuildStore($storeId = Store::DEFAULT_STORE_ID): array
+    {
+        $rebuiltIds = [];
+
+        $categories = $this->catCollectionFactory->create();
+        $this->filterCategories($categories, $storeId);
 
         /** @var Category $category */
-        foreach ($this->categoryCollection as $category) {
-            $categoryId = (int) $category->getId();
+        foreach ($categories as $category) {
+            $categoryId = (int)$category->getId();
             $category
                 ->setStoreId($storeId)
                 ->load($categoryId)
@@ -103,9 +101,32 @@ class Rebuilder
             $rebuiltIds[] = $categoryId;
         }
 
-        $this->categoryProductIndexer->executeList($rebuiltIds);
+        $this->catProductIndexer->executeList($rebuiltIds);
 
         return $rebuiltIds;
     }
 
+    /**
+     * Remove categories without Visual Merchandiser rules from the
+     * passed in collection
+     *
+     * @param CategoryCollection $categories
+     * @param int $storeId
+     * @return void
+     */
+    private function filterCategories(
+        CategoryCollection $categories,
+        $storeId = Store::DEFAULT_STORE_ID
+    ) {
+        $categories->setStoreId($storeId);
+        /** @var Category $category */
+        foreach ($categories as $key => $category) {
+            /** @var Rules $rules */
+            $rules = $this->rulesFactory->create();
+            $rules->loadByCategory($category);
+            if (!$rules->getId() || !$rules->getIsActive()) {
+                $categories->removeItemByKey($key);
+            }
+        }
+    }
 }
