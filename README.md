@@ -17,6 +17,7 @@ bin/magento catalog:visual-merchandiser:rebuild
 ## Changelog
 
 ### Unreleased
+* Removed support for PHP 5
 * Fixed code style & Magento 2 code quality warnings
 
 ### [0.1.2](https://github.com/dannynimmo/magento2-visual-merchandiser-rebuild/releases/tag/0.1.2) — 2017-06-27
